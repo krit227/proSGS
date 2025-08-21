@@ -1,0 +1,32 @@
+{
+  "name": "sgs-helper-app",
+  "version": "1.0.0",
+  "description": "กรอกคะแนน SGS อัตโนมัติ (S1/Mid/S10/Final) + ปุ่มล้างข้อมูล",
+  "main": "main.js",
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "pack:win": "electron-builder --win nsis",
+    "pack:mac": "electron-builder --mac dmg",
+    "pack:mac:universal": "electron-builder --mac dmg --universal",
+    "pack:mac:arm64": "electron-builder --mac dmg --arm64",
+    "pack:mac:x64": "electron-builder --mac dmg --x64"
+  },
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^24.6.0"
+  },
+  "build": {
+    "appId": "com.example.sgshelper",
+    "productName": "SGS Helper",
+    "files": [
+      "main.js",
+      "content.js",
+      "package.json"
+    ],
+    "directories": { "buildResources": "build" },
+    "mac": { "category": "public.app-category.education" },
+    "win": { "target": "nsis" }
+  }
+}
