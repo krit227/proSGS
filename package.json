@@ -1,32 +1,43 @@
 {
   "name": "sgs-helper-app",
   "version": "1.0.0",
-  "description": "กรอกคะแนน SGS อัตโนมัติ (S1/Mid/S10/Final) + ปุ่มล้างข้อมูล",
   "main": "main.js",
-  "author": "",
+  "author": "kritth",
   "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "pack:win": "electron-builder --win nsis",
-    "pack:mac": "electron-builder --mac dmg",
-    "pack:mac:universal": "electron-builder --mac dmg --universal",
-    "pack:mac:arm64": "electron-builder --mac dmg --arm64",
-    "pack:mac:x64": "electron-builder --mac dmg --x64"
-  },
-  "devDependencies": {
-    "electron": "^30.0.0",
-    "electron-builder": "^24.6.0"
+    "dist": "electron-builder"
   },
   "build": {
-    "appId": "com.example.sgshelper",
+    "appId": "com.krit.sgshelper",
     "productName": "SGS Helper",
     "files": [
-      "main.js",
-      "content.js",
-      "package.json"
+      "**/*",
+      "!node_modules/electron-builder/**",
+      "!dist/**"
     ],
-    "directories": { "buildResources": "build" },
-    "mac": { "category": "public.app-category.education" },
-    "win": { "target": "nsis" }
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64","ia32"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64","ia32"]
+        }
+      ],
+      "publisherName": "Krit"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^38.2.0",
+    "electron-builder": "^24.6.0"
   }
 }
