@@ -1,22 +1,45 @@
-name: Build Windows (NSIS)
+name: Build Windows .exe (electron-builder)
 
 on:
-  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+  # ถ้าต้องการ build เมื่อมี release tag: uncomment
+  # push:
+  #   tags:
+  #     - 'v*'
 
 jobs:
-  win:
+  build-windows:
     runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - name: Install deps
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
         run: npm ci
-      - name: Build Windows (no publish)
-        run: npm run pack:win -- --publish=never
-      - name: Upload installer
+
+      # Optional: if you need to set environment (like production)
+      - name: Build app (electron-builder)
+        env:
+          CI: true
+          # ถ้าต้องการ sign exe ให้ตั้ง SECRET CSC_LINK & CSC_KEY_PASSWORD บน repo settings
+          # CSC_LINK: ${{ secrets.CSC_LINK }}
+          # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+        run: npm run dist
+
+      - name: List dist
+        run: dir dist || ls -la dist
+
+      - name: Upload dist artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: sgs-helper-win
-          path: dist/*.exe
+          name: sgs-helper-windows
+          path: dist/*
