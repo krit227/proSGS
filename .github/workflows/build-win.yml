@@ -1,45 +1,31 @@
-name: Build Windows .exe (electron-builder)
+name: Build Windows EXE
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
-  # ถ้าต้องการ build เมื่อมี release tag: uncomment
-  # push:
-  #   tags:
-  #     - 'v*'
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build-windows:
+  build:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      # 1. เช็คเอา repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
+      # 2. ติดตั้ง Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: 22
+          node-version: 22 # ใช้ Node 22.x ตามที่คุณใช้
           cache: 'npm'
 
+      # 3. ติดตั้ง dependencies (ใช้ npm install แทน npm ci เพื่อไม่ให้ล้มเหลวจาก lock file)
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
-      # Optional: if you need to set environment (like production)
-      - name: Build app (electron-builder)
-        env:
-          CI: true
-          # ถ้าต้องการ sign exe ให้ตั้ง SECRET CSC_LINK & CSC_KEY_PASSWORD บน repo settings
-          # CSC_LINK: ${{ secrets.CSC_LINK }}
-          # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-        run: npm run dist
-
-      - name: List dist
-        run: dir dist || ls -la dist
-
-      - name: Upload dist artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: sgs-helper-windows
-          path: dist/*
+      # 4. สร้าง Windows build
+      - name: Build Windows EXE
+        run: npm run make-win
