@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "electron .",
+    "make-win": "electron-builder --windows nsis --x64 --ia32 --config.win.target=nsis"
     "dist": "electron-builder"
   },
   "build": {
