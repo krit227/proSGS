@@ -18,15 +18,17 @@ function createWindow () {
     width: 1280,
     height: 800,
     webPreferences: {
-      // ปลอดภัย: ไม่เปิด nodeIntegration ในหน้าเว็บ
       nodeIntegration: false,
       contextIsolation: true,
-      sandbox: true
+      preload: path.join(__dirname, "preload.js")
     }
   });
 
   // โหลดหน้า SGS (หรือจะให้ผู้ใช้พิมพ์ URL เองก็ได้)
-  win.loadURL('https://sgs.bopp-obec.info/');
+  win.loadURL("https://sgs.bopp-obec.info/sgs/Security/SignIn.aspx", {
+  userAgent: "Chrome"
+});
+
 
   // inject เมื่อโหลดเสร็จ
   const inject = () => {
